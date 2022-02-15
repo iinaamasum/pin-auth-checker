@@ -1,38 +1,55 @@
 function generatePassword() {
   const pinCode = Math.floor(Math.random() * 100000);
-  const pinCodeString = pinCode.toString();
-  if (pinCodeString.length <= 4) {
-    generatePassword();
-  } else {
+  const pinCodeString = pinCode + "";
+  if (pinCodeString.length == 5) {
     return pinCode;
+  } else {
+    generatePassword();
   }
 }
 
-document.querySelector(".generate-btn").addEventListener("click", () => {
-  const getCode = generatePassword();
-  document.querySelectorAll("#input-generate").value = getCode;
+document.querySelector(".generate-btn").addEventListener("click", function () {
+  let getCode = generatePassword();
+  while (getCode == undefined) {
+    getCode = generatePassword();
+  }
+  document.querySelector("#input-generate").value = getCode;
+  document.querySelector("#inputTwo").value = "";
 });
 
 const numCode = document.querySelectorAll(".button");
+console.log(numCode);
 for (const code of numCode) {
-  code.addEventListener("click", () => {
-    const inputField = document.querySelectorAll("#inputTwo").value;
+  code.addEventListener("click", function () {
+    const inputField = document.querySelector("#inputTwo");
     if (code.innerHTML == "C") {
-      inputField[1].value = "";
+      inputField.value = "";
     } else if (code.innerHTML === "&lt;") {
-      inputField[1].value = inputField[1].value.slice(0, -1);
+      inputField.value = inputField.value.slice(0, -1);
     } else {
-      inputField[1].value = inputField[1].value + code.innerHTML;
+      inputField.value = inputField.value + code.innerHTML;
     }
   });
 }
 
+const disVal = document.querySelectorAll(".notify");
+disVal[0].style.display = "none";
+disVal[1].style.display = "none";
+let count = 3;
 document.querySelector('button[type="submit"').addEventListener("click", () => {
-  const disVal = document.querySelectorAll(".notify");
   const genValueOne = document.querySelector("#input-generate").value;
-  const genValueTwo = document.querySelector("#inputTwo").value;
-  if (genValueOne == genValueTwo) {
-    //   disVal[0].style.display = 'none'
-    console.log("done");
+  const genValueTwo = document.querySelector("#inputTwo");
+  if (count == 1) {
+    document.querySelector('button[type="submit"').setAttribute = "disabled";
+    genValueTwo.value = "Lost your 3 try";
+  } else if (genValueOne === genValueTwo.value) {
+    disVal[0].style.display = "none";
+    disVal[1].style.display = "block";
+    count = 3;
+  } else if (genValueOne != genValueTwo.value) {
+    disVal[1].style.display = "none";
+    disVal[0].style.display = "block";
+    count--;
+    document.getElementById("try").innerText = count;
   }
 });
